@@ -109,10 +109,11 @@ const loginAdmin = async (req, res) => {
   }
 }
 // API to get all doctors list for admin panel 
+
 // const allDoctors = async (req, res) => {
 //   try {
 
-//     const doctors = await doctorModel.find().select("-password")
+//     const doctors = await doctorModel.find({}).select("-password")
 //     res.json({success:true , doctors})
 //   } catch (error) {
 //     console.log(error)
@@ -122,7 +123,31 @@ const loginAdmin = async (req, res) => {
 // }
 
 
+const allDoctors = async (req, res) => {
+  try {
+    // Fetch all doctors, excluding the password field
+    const doctors = await doctorModel.find({}).select("-password");
+
+    // Send the response
+    res.json({
+      success: true,
+      doctors,
+    });
+  } catch (error) {
+    console.log("Error fetching doctors:", error);
+    res.json({
+      success: false,
+      message: error.message,
+    });
+   
+  }
+  
+};
 
 
 
-export {addDoctor, loginAdmin}
+
+
+
+
+export {addDoctor, loginAdmin, allDoctors}
