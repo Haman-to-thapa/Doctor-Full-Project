@@ -1,6 +1,0 @@
-
-
-
-//Api to register user
-
-

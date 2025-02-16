@@ -7,3 +7,5 @@ doctorRouter.get('/list',doctorList)
 
 
 export default doctorRouter;
+
+

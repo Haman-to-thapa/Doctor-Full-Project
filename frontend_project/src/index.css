@@ -1,41 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@import "tailwindcss";
-
-
-
-
-@layer utilities {
-  .bg-primary {
-    background-color: #5f6fff !important;
-  }
-  .text-primary {
-    color: #5f6fff !important;
-  }
-}
-
-
-
-
-
-::-webkit-scrollbar {
-  @apply hidden;
+* {
+  font-family: Outfit;
 }
 
 .active hr {
   @apply block;
 }
 
-
-gridTemplateColumns:{
-  'auto':'repeat{auto-fill, minmax(200px, 1fr))'
+::-webkit-scrollbar {
+  @apply hidden;
 }
 
-*{font-family:outfit:}
-
-
-
-@media (max-width:740px) {
-  .active p{
-    @apply text-white bg-blue-900
+@media (max-width: 740px) {
+  .active {
+    @apply bg-primary;
   }
 }
