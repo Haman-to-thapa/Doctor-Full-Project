@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
+import dotenv from "dotenv";
 import connectDB from './config/mongoodb.js'
 import connectCloudinary from './config/cloudinary.js'
 import adminRouter from './routes/adminRoutes.js'
@@ -15,6 +16,7 @@ const app = express()
 const port = process.env.PORT || 4000;
 connectDB()
 connectCloudinary()
+dotenv.config();
 
 // middlewares
 app.use(express.json())

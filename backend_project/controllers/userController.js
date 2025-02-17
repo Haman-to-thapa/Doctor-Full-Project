@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
       const salt = await bcrypt.genSalt(10)
       const hashPassword = await bcrypt.hash(password,salt)
       
-      console.log(password)
+      
       const userData = {
         name,
         email,
@@ -66,6 +66,8 @@ const registerUser = async (req, res) => {
 
       const {email, password} = req.body
 
+
+
     
       const user = await userModel.findOne({email})
 
@@ -77,7 +79,9 @@ const registerUser = async (req, res) => {
       const isMatch = await bcrypt.compare(password, user.password)
 
       if (isMatch) {
-         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+        //  const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
+
 
          res.json({success:true, token})
       } else {
@@ -91,8 +95,89 @@ const registerUser = async (req, res) => {
     }
   }
 
+  // API to get user Profile data
+
+  const getProfile = async (req, res) => {
+    try {
+      // Assuming you're fetching user profile using the authenticated user ID
+      if (!req.user?.id) {
+        return res.status(401).json({ success: false, message: "Unauthorized. User ID not found." });
+      }
+
+      const user = await userModel.findById(req.user.id).select('-password -__v -tokens');
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
+  
+      res.status(200).json({ success: true, user });
+  
+    } catch (error) {
+      console.error("🔥 Error fetching profile:", error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };
+
+  // API to update user profile
+  
+
+  // const updateProfile = async (req, res) => {
+  //   try {
+
+  //     const {user, name, phone, address, dob, gender} = req.body 
+   
+  //     // if (!name || !phone || !dob || !gender) {
+  //     //   return res.json({success:false, message:"details missing"})
+  //     // }
+
+
+  //     await userModel.findByIdAndUpdate(
+  //   user,
+  //       {
+  //         name,
+  //         phone,
+  //         address: JSON.parse(address),
+  //         dob,
+  //         gender})
 
 
 
+  //     res.json({success:true, message:"profile update"})
 
-export {registerUser, loginUser};
+  //   } catch (error) {
+  //     console.log(error)
+  //     res.json({success:false, messag:error.message})
+  //   }
+  // }
+
+
+  const updateProfile = async (req, res) => {
+    try {
+        const {userId, name , phone , address, dob, gender} = req.body
+        const imageFile = req.file
+  
+        if (!name || !phone || !dob || !gender) {
+          return res.json({success:false, message:"Data Missing"})
+        }
+           
+        await userModel.findByIdAndUpdate(userId, {name, phone, address: JSON.parse(address), dob, gender})
+  
+        if (imageFile) {
+          // upload image to cloudinary
+          const imageUpload = await cloudinary.uploader.upload(imageFile.path,{resource_type:'image'})
+          const imageURL = imageUpload.secure_url
+  
+          await userModel.findByIdAndUpdate(userId,{image:imageURL})
+        }
+  
+        res.json({success:true, message:"profile Update"})
+  
+    } catch (error) {
+      console.log(error)
+      res.json({success:ture, message:error.message})
+    }
+  }
+
+
+
+export {registerUser, loginUser, getProfile, updateProfile};
