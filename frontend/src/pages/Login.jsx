@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [state, setState] = useState('Sign Up')
@@ -11,6 +12,8 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const { token, setToken, bakendUrl } = useContext(AppContext);
+
+  const navigate = useNavigate()
 
   const onSubmitHandler = async (event) => {
     event.preventDefault()
@@ -40,9 +43,16 @@ const Login = () => {
       }
 
     } catch (error) {
-
+      toast.error(error.message)
     }
   }
+
+  useEffect(() => {
+    if (token) {
+      navigate('/')
+    }
+  }, [token])
+
   return (
     <form
       onSubmit={onSubmitHandler}
