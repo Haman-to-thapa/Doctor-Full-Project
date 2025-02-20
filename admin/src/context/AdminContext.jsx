@@ -12,6 +12,8 @@ const AdminContextProvider = (props) => {
   const [aToken, setAToken] = useState(localStorage.getItem('aToken') ? localStorage.getItem('aToken') : "");
 
   const [doctors, setDoctors] = useState([])
+  const [appointments, setAppointments] = useState([])
+  const [dashboard, setDashboard] = useState(false)
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -62,8 +64,63 @@ const AdminContextProvider = (props) => {
     }
   }
 
-  '/api/admin/change-availability'
 
+  const getAllAppoitments = async () => {
+    try {
+      const { data } = await axios.post(backendUrl, '/api/admin/appointments', { headers: { Authorization: `Bearer ${aToken}` } })
+
+      if (data.success) {
+        setAppointments(data.appointments)
+        console.log(data.appointments)
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error) {
+      toast.error(error.message)
+
+    }
+  }
+
+
+  const cancelAppintment = async (appintmentId) => {
+
+    try {
+
+      const { data } = await axios.post(backendUrl, '/api/admin/cnacel-appointment', { appintmentId }, { headers: { Authorization: `Bearer ${aToken}` } })
+
+      if (data.success) {
+        toast.success(data.message)
+        getAllAppoitments()
+      } else {
+        toast.error(data.message)
+      }
+
+
+    } catch (error) {
+
+      console.log(error)
+      toast.error(data.message)
+    }
+
+  }
+
+
+  const getDashData = async () => {
+    try {
+
+      const { data } = await axios.get(backendUrl + '/api/admin/dashboard', { headers: { Authorization: `Bearer: ${aToken}` } })
+
+      if (data.success) {
+        setDashboard(data.ddashboard)
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
 
   const value = {
     aToken, setAToken,
@@ -71,6 +128,11 @@ const AdminContextProvider = (props) => {
     doctors,
     getAllDoctors,
     changeAvailaability,
+    appointments, setAppointments,
+    getAllAppoitments,
+    cancelAppintment,
+    getDashData,
+    dashboard
   }
 
   return (
