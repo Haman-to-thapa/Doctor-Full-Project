@@ -54,6 +54,7 @@ const AppContextProvider = (props) => {
 
   const value = {
     doctors,
+    getDoctorsData,
     currentSymbol,
     token, setToken,
     bakendUrl,
