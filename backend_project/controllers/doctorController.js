@@ -34,7 +34,8 @@ const doctorList = async (req,res) => {
     
   }
 }
-
+  // API for doctor Login
+  
 
 
 export {changeAvailable, doctorList};

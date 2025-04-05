@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { AppContext } from '../context/AppContext'
+import { doctors } from '../assets/assets'
 
 const Doctors = () => {
 
@@ -9,7 +9,7 @@ const Doctors = () => {
   const [showFilter, setShowFilter] = useState(false)
   const navigate = useNavigate()
 
-  const { doctors } = useContext(AppContext)
+
 
   const filterApply = () => {
     if (speciality) {
